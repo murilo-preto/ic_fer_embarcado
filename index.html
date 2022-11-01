@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Central de Expressões Faciais</title>
+  </head>
+  <body>
+    <h1>Interface Central - Expressões Faciais</h1>
+    <h2>Gráficos:</h2>
+    <h3>Gráfico em barra:</h3>
+
+    <div>
+      <canvas id="gBarra" width="300" height="300"></canvas>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+      <script>
+        const labels1 = [
+          "Desgosto",
+          "Felicidade",
+          "Medo",
+          "Neutro",
+          "Raiva",
+          "Surpresa",
+          "Tristeza",
+        ];
+
+        const data1 = {
+          labels: labels1,
+          datasets: [
+            {
+              label: "Ocorrência de cada Expressão facial",
+              backgroundColor: [
+                "rgba(255, 99, 132, 0.2)",
+                "rgba(255, 159, 64, 0.2)",
+                "rgba(255, 205, 86, 0.2)",
+                "rgba(75, 192, 192, 0.2)",
+                "rgba(54, 162, 235, 0.2)",
+                "rgba(153, 102, 255, 0.2)",
+                "rgba(201, 203, 207, 0.2)",
+              ],
+              borderColor: [
+                "rgb(255, 99, 132)",
+                "rgb(255, 159, 64)",
+                "rgb(255, 205, 86)",
+                "rgb(75, 192, 192)",
+                "rgb(54, 162, 235)",
+                "rgb(153, 102, 255)",
+                "rgb(201, 203, 207)",
+              ],
+              borderWidth: 1,
+              data: [1, 10, 1, 9, 1, 2, 5],
+            },
+          ],
+        };
+
+        const config1 = {
+          type: "bar",
+          data: data1,
+          options: { maintainAspectRatio: false },
+        };
+      </script>
+
+      <script>
+        const gBarra = new Chart(document.getElementById("gBarra"), config1);
+      </script>
+    </div>
+
+    <h3>Gráfico em disco:</h3>
+
+    <div>
+      <canvas id="gDisco" width="300" height="300"></canvas>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+      <script>
+        const labels2 = [
+          "Desgosto",
+          "Felicidade",
+          "Medo",
+          "Neutro",
+          "Raiva",
+          "Surpresa",
+          "Tristeza",
+        ];
+
+        const data2 = {
+          labels: labels2,
+          datasets: [
+            {
+              backgroundColor: [
+                "rgba(255, 99, 132, 0.2)",
+                "rgba(255, 159, 64, 0.2)",
+                "rgba(255, 205, 86, 0.2)",
+                "rgba(75, 192, 192, 0.2)",
+                "rgba(54, 162, 235, 0.2)",
+                "rgba(153, 102, 255, 0.2)",
+                "rgba(201, 203, 207, 0.2)",
+              ],
+              borderColor: [
+                "rgb(255, 99, 132)",
+                "rgb(255, 159, 64)",
+                "rgb(255, 205, 86)",
+                "rgb(75, 192, 192)",
+                "rgb(54, 162, 235)",
+                "rgb(153, 102, 255)",
+                "rgb(201, 203, 207)",
+              ],
+              borderWidth: 0.5,
+              data: [1, 10, 1, 9, 1, 2, 5],
+            },
+          ],
+        };
+
+        const config2 = {
+          type: "pie",
+          data: data2,
+          options: {
+            maintainAspectRatio: false,
+          },
+        };
+      </script>
+
+      <script>
+        const gDisco = new Chart(document.getElementById("gDisco"), config2);
+      </script>
+    </div>
+  </body>
+</html>
