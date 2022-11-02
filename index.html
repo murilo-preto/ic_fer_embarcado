@@ -18,7 +18,8 @@
       <script>
         let data = [1, 10, 1, 4, 1, 2, 1];
 
-        const labels1 = [
+        const labels = [
+          // Valor de cada coluna
           "Desgosto",
           "Felicidade",
           "Medo",
@@ -28,29 +29,35 @@
           "Tristeza",
         ];
 
-        let data1 = {
-          labels: labels1,
+        const bgc = [
+          //Background colour
+          "rgba(255, 99, 132, 0.2)",
+          "rgba(255, 159, 64, 0.2)",
+          "rgba(255, 205, 86, 0.2)",
+          "rgba(75, 192, 192, 0.2)",
+          "rgba(54, 162, 235, 0.2)",
+          "rgba(153, 102, 255, 0.2)",
+          "rgba(201, 203, 207, 0.2)",
+        ];
+
+        const bc = [
+          // Border colour
+          "rgb(255, 99, 132)",
+          "rgb(255, 159, 64)",
+          "rgb(255, 205, 86)",
+          "rgb(75, 192, 192)",
+          "rgb(54, 162, 235)",
+          "rgb(153, 102, 255)",
+          "rgb(201, 203, 207)",
+        ];
+
+        let dataBar = {
+          labels: labels,
           datasets: [
             {
               label: "Ocorrência da expressão facial",
-              backgroundColor: [
-                "rgba(255, 99, 132, 0.2)",
-                "rgba(255, 159, 64, 0.2)",
-                "rgba(255, 205, 86, 0.2)",
-                "rgba(75, 192, 192, 0.2)",
-                "rgba(54, 162, 235, 0.2)",
-                "rgba(153, 102, 255, 0.2)",
-                "rgba(201, 203, 207, 0.2)",
-              ],
-              borderColor: [
-                "rgb(255, 99, 132)",
-                "rgb(255, 159, 64)",
-                "rgb(255, 205, 86)",
-                "rgb(75, 192, 192)",
-                "rgb(54, 162, 235)",
-                "rgb(153, 102, 255)",
-                "rgb(201, 203, 207)",
-              ],
+              backgroundColor: bgc,
+              borderColor: bc,
               borderWidth: 1,
               data: data,
             },
@@ -59,7 +66,7 @@
 
         const config1 = {
           type: "bar",
-          data: data1,
+          data: dataBar,
           options: { maintainAspectRatio: false },
         };
       </script>
@@ -76,38 +83,12 @@
       <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
       <script>
-        const labels2 = [
-          "Desgosto",
-          "Felicidade",
-          "Medo",
-          "Neutro",
-          "Raiva",
-          "Surpresa",
-          "Tristeza",
-        ];
-
-        const data2 = {
-          labels: labels2,
+        const dataPie = {
+          labels: labels,
           datasets: [
             {
-              backgroundColor: [
-                "rgba(255, 99, 132, 0.2)",
-                "rgba(255, 159, 64, 0.2)",
-                "rgba(255, 205, 86, 0.2)",
-                "rgba(75, 192, 192, 0.2)",
-                "rgba(54, 162, 235, 0.2)",
-                "rgba(153, 102, 255, 0.2)",
-                "rgba(201, 203, 207, 0.2)",
-              ],
-              borderColor: [
-                "rgb(255, 99, 132)",
-                "rgb(255, 159, 64)",
-                "rgb(255, 205, 86)",
-                "rgb(75, 192, 192)",
-                "rgb(54, 162, 235)",
-                "rgb(153, 102, 255)",
-                "rgb(201, 203, 207)",
-              ],
+              backgroundColor: bgc,
+              borderColor: bc,
               borderWidth: 0.5,
               data: data,
             },
@@ -116,7 +97,7 @@
 
         const config2 = {
           type: "pie",
-          data: data2,
+          data: dataPie,
           options: {
             maintainAspectRatio: false,
           },
