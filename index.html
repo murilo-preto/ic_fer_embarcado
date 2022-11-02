@@ -16,6 +16,8 @@
       <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
       <script>
+        let data = [1, 10, 1, 4, 1, 2, 1];
+
         const labels1 = [
           "Desgosto",
           "Felicidade",
@@ -26,7 +28,7 @@
           "Tristeza",
         ];
 
-        const data1 = {
+        let data1 = {
           labels: labels1,
           datasets: [
             {
@@ -50,7 +52,7 @@
                 "rgb(201, 203, 207)",
               ],
               borderWidth: 1,
-              data: [1, 10, 1, 9, 1, 2, 5],
+              data: data,
             },
           ],
         };
@@ -107,7 +109,7 @@
                 "rgb(201, 203, 207)",
               ],
               borderWidth: 0.5,
-              data: [1, 10, 1, 9, 1, 2, 5],
+              data: data,
             },
           ],
         };
