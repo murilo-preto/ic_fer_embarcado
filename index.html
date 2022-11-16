@@ -69,10 +69,32 @@
           data: dataBar,
           options: { maintainAspectRatio: false },
         };
-      </script>
 
-      <script>
         const gBarra = new Chart(document.getElementById("gBarra"), config1);
+
+        function generateData() {
+          let randomData = [
+            Math.floor(Math.random() * 10) + 1,
+            Math.floor(Math.random() * 10) + 1,
+            Math.floor(Math.random() * 10) + 1,
+            Math.floor(Math.random() * 10) + 1,
+            Math.floor(Math.random() * 10) + 1,
+            Math.floor(Math.random() * 10) + 1,
+            Math.floor(Math.random() * 10) + 1,
+          ];
+
+          return randomData;
+        }
+
+        function alterData() {
+          gBarra.config.data.datasets[0].data = data;
+          gBarra.update();
+        }
+
+        setInterval(function lambda() {
+          data = generateData();
+        }, 1000);
+        setInterval(alterData, 1000);
       </script>
     </div>
 
@@ -102,10 +124,15 @@
             maintainAspectRatio: false,
           },
         };
-      </script>
 
-      <script>
         const gDisco = new Chart(document.getElementById("gDisco"), config2);
+
+        function alterData() {
+          gDisco.config.data.datasets[0].data = data;
+          gDisco.update();
+        }
+
+        setInterval(alterData, 1000);
       </script>
     </div>
   </body>
