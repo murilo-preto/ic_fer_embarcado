@@ -40,8 +40,10 @@ app.post("/api/facialexpressions", (req, res) => {
     date: date,
     time: time,
   };
+
+  res.status(200).send(fex);
   fexList.push(fex); // Atualiza base de dados
-  res.send(fex); // Retorna ao cliente o novo curso gerado
+  console.log(fex);
 });
 
 // PORT = environment variables -> changes dinamically -> Necessário para sites de hospedagem

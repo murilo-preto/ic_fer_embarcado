@@ -9,8 +9,6 @@ rmn = RMN()
 
 print('Iniciando captura de imagem')
 webcam = cv.VideoCapture(0)
-webcam.set(cv.CV_CAP_PROP_FRAME_WIDTH, 640)
-webcam.set(cv.CV_CAP_PROP_FRAME_HEIGHT, 360)
 
 while True:
     ret, imagem_colorida = webcam.read()
@@ -24,8 +22,7 @@ while True:
 
             result = rmn.detect_emotion_for_single_face_image(imagem_recortada)
 
-            r = requests.post(
-                'http://localhost:3000/api/facialexpressions', json={"fex": result[0]})
+            r = requests.post('http://192.168.0.23:3000/api/facialexpressions', json={"fex": result[0]})
             print(r.status_code)
 
     except Exception as e:
