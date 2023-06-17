@@ -12,7 +12,7 @@ const wsServer = new WebSocketServer({ noServer: true });
 
 wsServer.on("connection", function (connection) {
   const userId = v4();
-  console.log("Recieved a new connection");
+  console.log("Received a new connection");
   clients[userId] = connection;
   console.log(`${userId} connected.`);
 
@@ -88,17 +88,12 @@ app.post("/api/facialexpressions", (req, res) => {
     return;
   }
 
-  var today = new Date();
-  var date =
-    today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
-  var time =
-    today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+  let serverDateTime = new Date().toISOString().slice(0, 19).replace("T", " ");
 
   const fex = {
-    id: fexList.length + 1,
     fex: req.body.fex,
-    date: date,
-    time: time,
+    macaddress: req.body.macaddress,
+    datetime: serverDateTime,
   };
 
   res.status(200).send(fex);
@@ -106,9 +101,21 @@ app.post("/api/facialexpressions", (req, res) => {
   console.log(fex);
 });
 
-const fexList = [{ id: 1, fex: "happy", date: "2023-1-9", time: "17:58:34" }];
+const fexList = [];
 
 let data = generateData();
+
+/*
+data = [
+  "desgosto",
+  "felicidade",
+  "medo",
+  "neutro",
+  "raiva",
+  "surpresa",
+  "tristeza",
+];
+*/
 
 function generateData() {
   let randomData = [
