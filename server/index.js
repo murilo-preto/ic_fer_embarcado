@@ -56,23 +56,20 @@ connection.query(selectQuery, function (err, result, __) {
   });
 }
 
-// Send data to SQL
-let queryBuffer = [];
-function insertDataSQL (queryBuffer){
-  // relational query
-  let valuesQuery = concatValuesQuery(queryBuffer);
-  let detectionQuery = `INSERT INTO detection (id, facial_expression_id, date_and_time, network_id, location_id) VALUES ${valuesQuery}`;
-
-  // send detected data to database
-  connection.query(detectionQuery, function (err, result, __) {
+// Insert MacAddress in network_table if not exist
+function insertMacAddressSQL (macAddress){
+  let insertMacQuery = `INSERT IGNORE INTO network_address (id, mac_address) VALUES (null, "${macAddress}")`;
+  connection.query(insertMacQuery, function (err, res, field) {
     if (err) throw err;
   });
-};
+}
 
 // Format data to SQL VALUES format
 function concatValuesQuery (queryBuffer){ // queryBuffer to SQL VALUES
   let queryCache = new String();
   for (let i in queryBuffer){
+    insertMacAddressSQL(queryBuffer[i].detectedMacAddress);
+    
     let fexQuery = `(SELECT id FROM fex_table WHERE facial_expressions="${queryBuffer[i].detectedFex}")`;
     let networkQuery = `(SELECT id FROM network_address WHERE mac_address="${queryBuffer[i].detectedMacAddress}")`;
     let locationQuery = `(SELECT id FROM locations WHERE city="${queryBuffer[i].detectedCity}")`;
@@ -86,6 +83,19 @@ function concatValuesQuery (queryBuffer){ // queryBuffer to SQL VALUES
   }
   return queryCache;
 }
+
+// Send data to SQL
+let queryBuffer = [];
+function insertDataSQL (queryBuffer){
+  // relational query
+  let valuesQuery = concatValuesQuery(queryBuffer);
+  let detectionQuery = `INSERT INTO detection (id, facial_expression_id, date_and_time, network_id, location_id) VALUES ${valuesQuery}`;
+
+  // send detected data to database
+  connection.query(detectionQuery, function (err, result, __) {
+    if (err) throw err;
+  });
+};
 // -------------------------
 
 
