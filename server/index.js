@@ -1,6 +1,7 @@
 import express from "express";
 import { WebSocket, WebSocketServer } from "ws";
 import { v4 } from "uuid";
+import mysql from "mysql";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -8,8 +9,88 @@ const port = process.env.PORT || 3000;
 app.set("view engine", "ejs");
 app.use(express.json());
 
-const wsServer = new WebSocketServer({ noServer: true });
+// ---------- SQL ----------
+// Connect to SQL
+var connection = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "password",
+  database: "centerfex_2023",
+});
 
+// Log any connection error
+connection.connect(function (err) {
+  if (err) throw err;
+  console.log("Connected as id " + connection.threadId + " to query data");
+});
+
+// Get data from SQL
+function selectDataSQL (){
+  let selectQuery = "SELECT facial_expressions,facial_expression_id, COUNT(*) AS contagem FROM detection JOIN fex_table ON (detection.facial_expression_id=fex_table.id) GROUP BY facial_expression_id"
+connection.query(selectQuery, function (err, result, __) {
+  if (err) throw err;
+
+  let fexCount = {
+    "disgust": 0,
+    "happy": 0,
+    "fear": 0,
+    "neutral": 0,
+    "angry": 0,
+    "surprise": 0,
+    "sad": 0,
+  };
+
+  let toGraphFex = [];
+
+  for (let i of result){
+    let row = Object.assign({}, i);
+    fexCount[row.facial_expressions] = row.contagem;
+  }
+
+  for (let key in fexCount){
+    toGraphFex.push(fexCount[key]);
+  }
+
+  console.log(toGraphFex);
+  broadcastMessage(toGraphFex);
+  });
+}
+
+// Send data to SQL
+let queryBuffer = [];
+function insertDataSQL (queryBuffer){
+  // relational query
+  let valuesQuery = concatValuesQuery(queryBuffer);
+  let detectionQuery = `INSERT INTO detection (id, facial_expression_id, date_and_time, network_id, location_id) VALUES ${valuesQuery}`;
+
+  // send detected data to database
+  connection.query(detectionQuery, function (err, result, __) {
+    if (err) throw err;
+  });
+};
+
+// Format data to SQL VALUES format
+function concatValuesQuery (queryBuffer){ // queryBuffer to SQL VALUES
+  let queryCache = new String();
+  for (let i in queryBuffer){
+    let fexQuery = `(SELECT id FROM fex_table WHERE facial_expressions="${queryBuffer[i].detectedFex}")`;
+    let networkQuery = `(SELECT id FROM network_address WHERE mac_address="${queryBuffer[i].detectedMacAddress}")`;
+    let locationQuery = `(SELECT id FROM locations WHERE city="${queryBuffer[i].detectedCity}")`;
+
+    if (i==0){
+      queryCache += `(null, ${fexQuery}, (SELECT UTC_TIMESTAMP), ${networkQuery}, ${locationQuery})`;
+    }
+    else{
+      queryCache += `,(null, ${fexQuery}, (SELECT UTC_TIMESTAMP), ${networkQuery}, ${locationQuery})`;
+    }
+  }
+  return queryCache;
+}
+// -------------------------
+
+
+// ---------- Eventos Webcksocket ----------
+const wsServer = new WebSocketServer({ noServer: true });
 wsServer.on("connection", function (connection) {
   const userId = v4();
   console.log("Received a new connection");
@@ -24,9 +105,11 @@ wsServer.on("connection", function (connection) {
     connection.send("Server: Connection established");
   });
 });
+// -----------------------------------------
 
+
+// ---------- Eventos HTTP ----------
 const server = app.listen(port);
-
 server.on("upgrade", (req, socket, head) => {
   wsServer.handleUpgrade(req, socket, head, (ws) => {
     wsServer.emit("connection", ws, req);
@@ -34,15 +117,8 @@ server.on("upgrade", (req, socket, head) => {
 });
 
 const clients = {};
-let editorContent = null;
-
-const typesDef = {
-  USER_EVENT: "userevent",
-  CONTENT_CHANGE: "contentchange",
-};
 
 function broadcastMessage(json) {
-  // We are sending the current data to all connected clients
   const data = JSON.stringify(json);
   for (let userId in clients) {
     let client = clients[userId];
@@ -70,13 +146,7 @@ app.get("/about", function (req, res) {
 });
 
 app.get("/api/facialexpressions", (req, res) => {
-  res.send(fexList);
-});
-
-app.get("/api/facialexpressions/:id", (req, res) => {
-  const fex = fexList.find((c) => c.id === parseInt(req.params.id));
-  if (!fex) res.status(404).send("Facial expression with given ID not found");
-  res.send(fex);
+  res.send(queryBuffer);
 });
 
 app.post("/api/facialexpressions", (req, res) => {
@@ -88,50 +158,22 @@ app.post("/api/facialexpressions", (req, res) => {
     return;
   }
 
-  let serverDateTime = new Date().toISOString().slice(0, 19).replace("T", " ");
-
   const fex = {
-    fex: req.body.fex,
-    macaddress: req.body.macaddress,
-    datetime: serverDateTime,
+    detectedFex: req.body.fex,
+    detectedMacAddress: req.body.macaddress,
+    detectedCity: "SantoAndre",
   };
 
   res.status(200).send(fex);
-  fexList.push(fex); // Atualiza base de dados
+  queryBuffer.push(fex); // Atualiza base de dados
   console.log(fex);
 });
 
-const fexList = [];
+setInterval(function () {
+  if (Object.keys(queryBuffer).length>4){
+    insertDataSQL(queryBuffer);
+    queryBuffer = [];
+  }
+}, 3000);
 
-let data = generateData();
-
-/*
-data = [
-  "desgosto",
-  "felicidade",
-  "medo",
-  "neutro",
-  "raiva",
-  "surpresa",
-  "tristeza",
-];
-*/
-
-function generateData() {
-  let randomData = [
-    Math.floor(Math.random() * 10) + 1,
-    Math.floor(Math.random() * 10) + 1,
-    Math.floor(Math.random() * 10) + 1,
-    Math.floor(Math.random() * 10) + 1,
-    Math.floor(Math.random() * 10) + 1,
-    Math.floor(Math.random() * 10) + 1,
-    Math.floor(Math.random() * 10) + 1,
-  ];
-
-  return randomData;
-}
-
-setInterval(function lambda() {
-  data = generateData();
-  broadcastMessage(data);
-}, 1000);
+setInterval(selectDataSQL, 3000);
