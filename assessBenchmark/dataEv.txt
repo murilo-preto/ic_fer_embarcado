@@ -1,0 +1,49 @@
++-----+-----+-----+
+Deepface-AffectNet-high-performance-desktop
+0.08657 +- 0.01728
++-----+-----+-----+
+Deepface-AffectNet-rpi
+0.22542 +- 0.13403
++-----+-----+-----+
+Deepface-AffectNet-standard-desktop
+0.08196 +- 0.01746
++-----+-----+-----+
+Deepface-AffectNet-standard-notebook
+0.09744 +- 0.06424
++-----+-----+-----+
+Deepface-CK-high-performance-desktop
+0.13181 +- 0.03846
++-----+-----+-----+
+Deepface-CK-rpi
+0.37256 +- 0.10138
++-----+-----+-----+
+Deepface-CK-standard-desktop
+0.13932 +- 0.02174
++-----+-----+-----+
+Deepface-CK-standard-notebook
+0.17895 +- 0.01966
++-----+-----+-----+
+RMN-AffectNet-high-performance-desktop
+0.35498 +- 0.04104
++-----+-----+-----+
+RMN-AffectNet-raspi
+2.55912 +- 2.22971
++-----+-----+-----+
+RMN-AffectNet-standard-desktop
+0.49193 +- 0.03685
++-----+-----+-----+
+RMN-AffectNet-standard-notebook
+0.50613 +- 0.02791
++-----+-----+-----+
+RMN-CK-high-performance-desktop
+0.40967 +- 0.02509
++-----+-----+-----+
+RMN-CK-raspberryPi
+2.85079 +- 0.50498
++-----+-----+-----+
+RMN-CK-standard-desktop
+0.65036 +- 0.04024
++-----+-----+-----+
+RMN-CK-standard-notebook
+0.51236 +- 0.03614
++-----+-----+-----+
