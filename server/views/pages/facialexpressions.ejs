@@ -19,7 +19,8 @@
         <canvas id="gBarra" width="300" height="300"></canvas>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script>
-          var socket = new WebSocket("ws://localhost:3000");
+
+          var socket = new WebSocket(`ws://${location.host}`);
 
           socket.onerror = function (error) {
             console.log("Erro do WebSocket: " + error);
